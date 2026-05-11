@@ -1,24 +1,31 @@
-from datetime import date
 class Pagina:
-    def __init__(self, numero, contenido):
-        self.numero = numero
-        self.contenido = contenido
+    def __init__(self, numero_pagina, contenido_pagina):
+
+        self.numero_pagina = numero_pagina
+        self.contenido_pagina = contenido_pagina
     def mostrarInfo(self):
-        print("Página", self.numero, ":", self.contenido)
-class Libro:
-    def __init__(self, titulo, isbn, contenidos_paginas):
-        self.titulo = titulo
-        self.isbn = isbn
-        self.paginas = []
-        numero = 1
-        for contenido in contenidos_paginas:
-            pagina = Pagina(numero, contenido)
-            self.paginas.append(pagina)
-            numero += 1
-    def leer(self):
-        print("Libro:", self.titulo)
-        for pagina in self.paginas:
-            pagina.mostrarInfo()
+
+        print("Pagina", self.numero_pagina, ":",
+              self.contenido_pagina)
+class Horario:
+    def __init__(self,
+                 dias_apertura,
+                 hora_apertura,
+                 hora_cierre):
+        self.dias_apertura = dias_apertura
+        self.hora_apertura = hora_apertura
+        self.hora_cierre = hora_cierre
+    def mostrarHorario(self):
+        print("Dias apertura:", self.dias_apertura)
+        print("Hora apertura:", self.hora_apertura)
+        print("Hora cierre:", self.hora_cierre)
+    def __str__(self):
+
+        return (self.dias_apertura +
+                " | " +
+                self.hora_apertura +
+                " - " +
+                self.hora_cierre)
 class Autor:
     def __init__(self, nombre, nacionalidad):
         self.nombre = nombre
@@ -26,34 +33,72 @@ class Autor:
     def mostrarInfo(self):
         print("Autor:", self.nombre)
         print("Nacionalidad:", self.nacionalidad)
+    def __str__(self):
+        return (self.nombre +
+                " (" +
+                self.nacionalidad +
+                ")")
 class Estudiante:
     def __init__(self, codigo, nombre):
         self.codigo = codigo
         self.nombre = nombre
     def mostrarInfo(self):
-        print("Código:", self.codigo)
+        print("Codigo:", self.codigo)
         print("Nombre:", self.nombre)
+    def __str__(self):
+        return (self.nombre +
+                " [" +
+                self.codigo +
+                "]")
+class Libro:
+    def __init__(self,
+                 titulo,
+                 isbn,
+                 contenido_paginas):
+        self.titulo = titulo
+        self.isbn = isbn
+        self.paginas = []
+        for i in range(len(contenido_paginas)):
+            pagina = Pagina(
+                i + 1,
+                contenido_paginas[i]
+            )
+            self.paginas.append(pagina)
+        print("Libro '" + titulo +
+              "' creado correctamente")
+    def leer(self):
+        print("\nLEYENDO LIBRO")
+        print("Libro:", self.titulo)
+        for pagina in self.paginas:
+            pagina.mostrarInfo()
+    def __str__(self):
+        return (self.titulo +
+                " - ISBN: " +
+                self.isbn)
 class Prestamo:
-    def __init__(self, estudiante, libro):
-        self.fechaPrestamo = date.today()
-        self.fechaDevolucion = "Pendiente"
+    def __init__(self,
+                 fecha_prestamo,
+                 fecha_devolucion,
+                 estudiante,
+                 libro):
+        self.fecha_prestamo = fecha_prestamo
+        self.fecha_devolucion = fecha_devolucion
         self.estudiante = estudiante
         self.libro = libro
     def mostrarInfo(self):
-        print("Préstamo:")
-        print("Estudiante:", self.estudiante.nombre)
-        print("Libro:", self.libro.titulo)
-        print("Fecha préstamo:", self.fechaPrestamo)
-        print("Fecha devolución:", self.fechaDevolucion)
-class Horario:
-    def __init__(self, dias, horaApertura, horaCierre):
-        self.dias = dias
-        self.horaApertura = horaApertura
-        self.horaCierre = horaCierre
-    def mostrarHorario(self):
-        print("Horario:")
-        print(self.dias)
-        print(self.horaApertura, "-", self.horaCierre)
+        print("\nPRESTAMO")
+        print("Fecha prestamo:",
+              self.fecha_prestamo)
+        print("Fecha devolucion:",
+              self.fecha_devolucion)
+        print("Estudiante:",
+              self.estudiante)
+        print("Libro:",
+              self.libro)
+    def __str__(self):
+        return (str(self.estudiante) +
+                " -> " +
+                str(self.libro))
 class Biblioteca:
     def __init__(self, nombre):
         self.nombre = nombre
@@ -65,58 +110,122 @@ class Biblioteca:
             "08:00",
             "20:00"
         )
+        print("Biblioteca '" +
+              nombre +
+              "' creada")
     def agregarLibro(self, libro):
         self.libros.append(libro)
+        print("Libro agregado:",
+              libro)
     def agregarAutor(self, autor):
         self.autores.append(autor)
-    def prestarLibro(self, estudiante, libro):
-        prestamo = Prestamo(estudiante, libro)
+        print("Autor agregado:",
+              autor)
+    def prestarLibro(self,
+                     estudiante,
+                     libro):
+        prestamo = Prestamo(
+            "01/06/2026",
+            "10/06/2026",
+            estudiante,
+            libro
+        )
         self.prestamos.append(prestamo)
-        print("Libro prestado correctamente")
+        print("Prestamo realizado correctamente")
     def mostrarEstado(self):
-        print("\nBIBLIOTECA")
-        print("Nombre:", self.nombre)
+        print("\nESTADO DE LA BIBLIOTECA")
+        print("\nNombre:",
+              self.nombre)
+        print("\nHORARIO")
+        self.horario.mostrarHorario()
         print("\nLIBROS")
         for libro in self.libros:
-            print(libro.titulo)
+            print(libro)
         print("\nAUTORES")
         for autor in self.autores:
-            print(autor.nombre)
+            print(autor)
         print("\nPRESTAMOS")
         for prestamo in self.prestamos:
             prestamo.mostrarInfo()
-        print("\nHORARIO")
-        self.horario.mostrarHorario()
     def cerrarBiblioteca(self):
-        print("\nLa biblioteca ha cerrado")
+        print("\nCerrando biblioteca...")
         self.prestamos.clear()
-autor1 = Autor("Gabriel Garcia Marquez", "Colombiano")
-autor2 = Autor("Mario Vargas Llosa", "Peruano")
-libro1 = Libro(
-    "Cien Años de Soledad",
-    "12345",
-    [
-        "Muchos años despues...",
-        "La historia continua..."
-    ]
+        print("Todos los prestamos fueron eliminados")
+biblioteca = Biblioteca(
+    "Biblioteca Central UMSA"
 )
-libro2 = Libro(
-    "La Ciudad y los Perros",
-    "67890",
-    [
-        "Inicio del libro",
-        "Final del libro"
-    ]
+autor1 = Autor(
+    "Cormac McCarthy",
+    "Estadounidense"
 )
-estudiante1 = Estudiante("2024001", "Juan Perez")
-biblioteca = Biblioteca("Biblioteca Central UMSA")
-biblioteca.agregarLibro(libro1)
-biblioteca.agregarLibro(libro2)
+autor2 = Autor(
+    "Peter Heller",
+    "Estadounidense"
+)
+autor3 = Autor(
+    "Steve Amsterdam",
+    "Australiano"
+)
+autor4 = Autor(
+    "Walter Miller",
+    "Estadounidense"
+)
 biblioteca.agregarAutor(autor1)
 biblioteca.agregarAutor(autor2)
-biblioteca.prestarLibro(estudiante1, libro1)
+biblioteca.agregarAutor(autor3)
+biblioteca.agregarAutor(autor4)
+paginas_libro1 = [
+    "El mundo estaba destruido...",
+    "Padre e hijo caminaban...",
+    "La carretera seguia vacia..."
+]
+libro1 = Libro(
+    "La carretera",
+    "ISBN-111",
+    paginas_libro1
+)
+paginas_libro2 = [
+    "El avion habia caido...",
+    "El perro observaba el bosque...",
+    "Las estrellas brillaban..."
+]
+libro2 = Libro(
+    "Las estrellas caninas",
+    "ISBN-222",
+    paginas_libro2
+)
+paginas_libro3 = [
+    "El futuro era incierto...",
+    "Nadie sabia que ocurriria...",
+    "El mundo habia cambiado..."
+]
+libro3 = Libro(
+    "Cosas que no vimos venir",
+    "ISBN-333",
+    paginas_libro3
+)
+paginas_libro4 = [
+    "Los monjes guardaban libros...",
+    "La humanidad intentaba renacer...",
+    "El conocimiento era importante..."
+]
+libro4 = Libro(
+    "Un cantico por Leibowitz",
+    "ISBN-444",
+    paginas_libro4
+)
+biblioteca.agregarLibro(libro1)
+biblioteca.agregarLibro(libro2)
+biblioteca.agregarLibro(libro3)
+biblioteca.agregarLibro(libro4)
+estudiante1 = Estudiante(
+    "2025001",
+    "Carlos Perez"
+)
+biblioteca.prestarLibro(
+    estudiante1,
+    libro1
+)
 biblioteca.mostrarEstado()
-print("\nLEER LIBRO")
 libro1.leer()
 biblioteca.cerrarBiblioteca()
-
